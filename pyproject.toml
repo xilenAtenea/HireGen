@@ -1,0 +1,7 @@
+[project]
+name = "n8n-cv-automation"
+version = "0.1.0"
+description = "CV automation with n8n"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []

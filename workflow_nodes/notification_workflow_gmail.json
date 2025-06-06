@@ -1,0 +1,86 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "atenea.salazar0114@gmail.com",
+        "subject": "=¡Nueva CV relacionada a {{ $json.Vacante }}!",
+        "emailType": "text",
+        "message": "=¡La CV de {{ $json.Nombre }} está relacionada al cargo {{ $json.Vacante }}! Revisalo [aquí](https://docs.google.com/spreadsheets/d/1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U/edit?usp=sharing)",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        200
+      ],
+      "id": "d65aecfb-39b2-46aa-b4c4-b38cf9988052",
+      "name": "Gmail",
+      "webhookId": "35d04df0-619c-4b1e-af46-a3d798934dbb",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "mzghkGtkXPQ5BI1D",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U",
+          "mode": "list",
+          "cachedResultName": "n8n_llms",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "relacionado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "id": "adc59a1d-0aaa-4a77-bb58-8b664adbab52",
+      "name": "Google Sheets Trigger1",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "bUZt4mXgwN6ekbyz",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a96820eeb88ca8b978dd7c17fcd3f9993998c8374ce5ca29f022d5249670f8e"
+  }
+}

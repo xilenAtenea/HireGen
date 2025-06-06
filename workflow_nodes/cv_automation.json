@@ -1,0 +1,344 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "has:attachment"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "CV",
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e817b014-5340-42f7-9acd-f0e2884bb9e2",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "mzghkGtkXPQ5BI1D",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "CV0",
+        "name": "={{ $json.from.value[0].name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "161CCZdo-FoxR0ZLTPpRhcVg9vNug_EPe",
+          "mode": "list",
+          "cachedResultName": "n8n_test",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/161CCZdo-FoxR0ZLTPpRhcVg9vNug_EPe"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        220,
+        0
+      ],
+      "id": "320ed64c-7d7b-41d7-8ecc-07613f2ffece",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vVH5hV8K8IQD7gg9",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        440,
+        0
+      ],
+      "id": "2866f5a7-7129-48a8-bb5e-d7c4cdcc4d28",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vVH5hV8K8IQD7gg9",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Actúa como un reclutador experto en ciencia de datos.  \nTu tarea es revisar el siguiente currículum vitae (en texto plano) y compararlo con la vacante que se describe más abajo.  \nClasifica si el perfil está **relacionado** o **no relacionado** con la vacante, según si cumple con los requisitos mencionados.\n\n# VACANTE #\nVacante: Científico/a de Datos Junior  \nEmpresa: DataNova Analytics  \nUbicación: Remoto / Bogotá, Colombia  \nTipo de contrato: Tiempo completo  \n\nResponsabilidades clave:  \n- Análisis exploratorio de datos.\n- Modelos simples de regresión o clasificación.\n- Visualizaciones y reportes.\n- Trabajo colaborativo.\n\nRequisitos clave:\n- Nivel educativo: **pregrado** enfocado en ingeniería de datos, estadística o afines.\n- Experiencia: debe tener entre 6 meses y un año de experiencia laboral.\n\nDeseables:  \n- SQL básico. \n- Python o R.\n- Estadística y machine learning (fundamentos).\n- Pandas, Scikit-learn o similares.\n- Proyectos personales, académicos o hackatones.\n- Inglés B2 (intermedio) en adelante.\n- Estabilidad laboral: haber estado 2 años o más con una misma empresa.\n\n# CV DEL CANDIDATO #\n{{ $json.text }}\n\n# INSTRUCCIONES #\nDevuelve exclusivamente un JSON con los siguientes campos:\n\n- \"nombre\": Nombre del candidato (si aparece en el CV)  \n- \"vacante\": \"Científico/a de Datos Junior\"  \n- \"categoría\": \"relacionado\" si el CV cumple con los requisitos mínimos, o \"no relacionado\" si no los cumple. \n- \"resumen\": Un párrafo breve (máx. 4 líneas) que resuma el perfil del candidato con foco en ciencia de datos.\n- \"habilidades_principales\": Menciona las habilidades técnicas mencionadas en el CV separadas por comas.\n- \"contacto\": Si en el CV aparece, incluye correo electrónico, LinkedIn, o número telefónico (si el número tiene prefijo, debe estar encerrado entre paréntesis, ejemplo: (+57) 321 2345 5634).\n\nDevuelve solo el JSON, sin explicaciones.",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        860,
+        0
+      ],
+      "id": "3c297d6d-9909-4417-a9a3-943b568d04f4",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        840,
+        200
+      ],
+      "id": "c4d9b0f9-c267-4710-b6c2-17e5eb92ce98",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "nPk7HtiJLwjDZkoE",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        660,
+        0
+      ],
+      "id": "f6b4b311-f1a0-46e3-893f-f4a5d2f52b17",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputItem = $input.first().json;\n\nconst rawText = inputItem.text;\n\nconst cleaned = rawText\n  .replace(/```/g, '') \n  .replace(/\\\\n/g, '') \n  .trim();\n\nlet parsed;\ntry {\n  parsed = JSON.parse(cleaned);\n} catch (err) {\n  throw new Error(\"No se pudo parsear el texto como JSON: \" + err.message);\n}\n\nconst resultado = {\n  Nombre: parsed.nombre || '',\n  Vacante: parsed.vacante || '',\n  Resumen: parsed.resumen || '',\n  Categoría: parsed.categoría || '',\n  \"Habilidades Principales\": parsed[\"habilidades_principales\"] || '',\n  Contacto: parsed.contacto || ''\n};\n\nreturn [{ json: resultado }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        0
+      ],
+      "id": "ec911290-ed70-4f74-972b-6b67b150416d",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U",
+          "mode": "list",
+          "cachedResultName": "n8n_llms",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json[\"Categoría\"] }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "Nombre"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Vacante",
+              "displayName": "Vacante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen",
+              "displayName": "Resumen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoría",
+              "displayName": "Categoría",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Habilidades Principales",
+              "displayName": "Habilidades Principales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contacto",
+              "displayName": "Contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1440,
+        0
+      ],
+      "id": "80ef4828-2235-4db3-8d8d-95d2eab329a6",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wT0gOeefIxreqQ7b",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a96820eeb88ca8b978dd7c17fcd3f9993998c8374ce5ca29f022d5249670f8e"
+  }
+}

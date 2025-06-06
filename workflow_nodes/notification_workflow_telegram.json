@@ -1,0 +1,84 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U",
+          "mode": "list",
+          "cachedResultName": "n8n_llms",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "relacionado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "48d70ff8-dd9a-4250-9cb8-a7a421dd0757",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "bUZt4mXgwN6ekbyz",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": your-chat-id, //Replace with your actual chat ID
+        "text": "=¡La CV de {{ $json.Nombre }} está relacionada al cargo {{ $json.Vacante }}! Revisalo [aquí](https://docs.google.com/spreadsheets/d/1Yx7C02MWctk11l1lJjNdAn2j5rQv7-kHPdualPEvq_U/edit?usp=sharing)",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "49cae3b6-810f-4b68-919d-94c314db5c19",
+      "name": "Telegram",
+      "webhookId": "23c29be9-a0a4-4045-aff8-37883d6fbb6d",
+      "credentials": {
+        "telegramApi": {
+          "id": "h51Q96g8w9GC64XY",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a96820eeb88ca8b978dd7c17fcd3f9993998c8374ce5ca29f022d5249670f8e"
+  }
+}
